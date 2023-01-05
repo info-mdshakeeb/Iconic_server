@@ -30,19 +30,8 @@ mongodb()
 //collection :
 const Catagorys = client.db("ICONIC").collection("catagorys");
 const Users = client.db("ICONIC").collection("users");
+const Shops = client.db("ICONIC").collection("shops");
 
-app.get('/catagories', async (req, res) => {
-    const quary = {}
-    try {
-        const result = await Catagorys.find(quary).toArray()
-        res.send({ success: true, data: result })
-    } catch (error) {
-        console.log(error.name, error.message)
-        res.send({
-            success: false, message: error.message
-        })
-    }
-})
 app.get('/user', async (req, res) => {
     const { email } = req.query
     // console.log(email);
@@ -52,9 +41,7 @@ app.get('/user', async (req, res) => {
         res.send({ success: true, data: result })
     } catch (error) {
         console.log(error.name, error.message)
-        res.send({
-            success: false, message: error.message
-        })
+        res.send({ success: false, message: error.message })
     }
 })
 app.post('/users', async (req, res) => {
@@ -65,9 +52,7 @@ app.post('/users', async (req, res) => {
         res.send({ success: true, data: result })
     } catch (error) {
         console.log(error.name, error.message)
-        res.send({
-            success: false, message: error.message
-        })
+        res.send({ success: false, message: error.message })
     }
 })
 app.put('/users/:email', async (req, res) => {
@@ -95,5 +80,48 @@ app.put('/users/:email', async (req, res) => {
         }
     }
 })
+app.get('/catagories', async (req, res) => {
+    const quary = {}
+    try {
+        const result = await Catagorys.find(quary).toArray()
+        res.send({ success: true, data: result })
+    } catch (error) {
+        console.log(error.name, error.message)
+        res.send({
+            success: false, message: error.message
+        })
+    }
+})
+
+//----------------------------------------
+
+app.post('/shops', async (req, res) => {
+    const shopDetails = req.body
+    // console.log(user);
+    try {
+        const result = await Shops.insertOne(shopDetails)
+        res.send({ success: true, data: result })
+    } catch (error) {
+        console.log(error.name, error.message)
+        res.send({ success: false, message: error.message })
+    }
+})
+app.get('/shops', async (req, res) => {
+    const { email } = req.query
+    // console.log(email);
+    const quary = { ownerEmail: email }
+    // console.log(user);
+    try {
+        const result = await Shops.find(quary).toArray()
+        res.send({ success: true, data: result })
+    } catch (error) {
+        console.log(error.name, error.message)
+        res.send({ success: false, message: error.message })
+    }
+})
+
+
+
+
 //
 app.listen(port, () => console.log(process.env.PORT + " port is open"))
