@@ -29,10 +29,9 @@ mongodb()
 
 //collection :
 const Catagorys = client.db("ICONIC").collection("catagorys");
-
+const Users = client.db("ICONIC").collection("users");
 
 app.get('/catagories', async (req, res) => {
-
     const quary = {}
     try {
         const result = await Catagorys.find(quary).toArray()
@@ -42,6 +41,58 @@ app.get('/catagories', async (req, res) => {
         res.send({
             success: false, message: error.message
         })
+    }
+})
+app.get('/user', async (req, res) => {
+    const { email } = req.query
+    // console.log(email);
+    const quary = { email: email }
+    try {
+        const result = await Users.find(quary).toArray()
+        res.send({ success: true, data: result })
+    } catch (error) {
+        console.log(error.name, error.message)
+        res.send({
+            success: false, message: error.message
+        })
+    }
+})
+app.post('/users', async (req, res) => {
+    const user = req.body
+    // console.log(user);
+    try {
+        const result = await Users.insertOne(user)
+        res.send({ success: true, data: result })
+    } catch (error) {
+        console.log(error.name, error.message)
+        res.send({
+            success: false, message: error.message
+        })
+    }
+})
+app.put('/users/:email', async (req, res) => {
+    const { email } = req.params;
+    const updateUser = req.body;
+    const filter = { email: email }
+    const options = { upsert: true }
+    if (updateUser.role) {
+        const updateDoc = { $set: { role: 'seller', name: updateUser.name } }
+        try {
+            const result = await Users.updateOne(filter, updateDoc, options)
+            res.send({ success: true, data: { result } })
+        } catch (error) {
+            console.log(error.name, error.message)
+            res.send({ success: false, message: error.message })
+        }
+    } else {
+        const updateDoc = { $set: { role: null, name: updateUser.name } }
+        try {
+            const result = await Users.updateOne(filter, updateDoc, options)
+            res.send({ success: true, data: { result } })
+        } catch (error) {
+            console.log(error.name, error.message)
+            res.send({ success: false, message: error.message })
+        }
     }
 })
 //
