@@ -21,9 +21,7 @@ const mongodb = () => {
     try {
         client.connect()
         console.log('database connected');
-    } catch (error) {
-        console.log(error.message);
-    }
+    } catch (error) { console.log(error.message); }
 }
 mongodb()
 
@@ -34,10 +32,13 @@ const Shops = client.db("ICONIC").collection("shops");
 
 app.get('/user', async (req, res) => {
     const { email } = req.query
-    // console.log(email);
     const quary = { email: email }
     const result = await Users.find(quary).toArray()
-    res.send({ success: true, data: result })
+    if (result.length) {
+        res.send({ success: true, data: result })
+    } else {
+        res.status(404).send({ success: false, data: result })
+    }
 })
 app.post('/users', async (req, res) => {
     const user = req.body
@@ -81,19 +82,19 @@ app.get('/shops', async (req, res) => {
     // console.log(user);
     const result = await Shops.find(quary).toArray()
     res.send({ success: true, data: result })
-
 })
 
 // erroe heandel :
 app.use((req, res, next) => {
-    res.status(500).send("Url not found")
+    next("Url not found")
 })
 app.use((err, req, res, next) => {
     if (err.message) {
         res.status(500).send(err.message)
-    } else {
-        res.status(500).send('there is an error')
+    } else if (err) {
+        res.status(500).send(err)
     }
+    else { res.status(500).send('there is an error') }
 })
 //lissen:
 app.listen(port, () => console.log(process.env.PORT + " port is open"))
