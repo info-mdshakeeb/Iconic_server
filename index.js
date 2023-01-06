@@ -36,24 +36,13 @@ app.get('/user', async (req, res) => {
     const { email } = req.query
     // console.log(email);
     const quary = { email: email }
-    try {
-        const result = await Users.find(quary).toArray()
-        res.send({ success: true, data: result })
-    } catch (error) {
-        console.log(error.name, error.message)
-        res.send({ success: false, message: error.message })
-    }
+    const result = await Users.find(quary).toArray()
+    res.send({ success: true, data: result })
 })
 app.post('/users', async (req, res) => {
     const user = req.body
-    // console.log(user);
-    try {
-        const result = await Users.insertOne(user)
-        res.send({ success: true, data: result })
-    } catch (error) {
-        console.log(error.name, error.message)
-        res.send({ success: false, message: error.message })
-    }
+    const result = await Users.insertOne(user)
+    res.send({ success: true, data: result })
 })
 app.put('/users/:email', async (req, res) => {
     const { email } = req.params;
@@ -62,35 +51,18 @@ app.put('/users/:email', async (req, res) => {
     const options = { upsert: true }
     if (updateUser.role) {
         const updateDoc = { $set: { role: 'seller', name: updateUser.name } }
-        try {
-            const result = await Users.updateOne(filter, updateDoc, options)
-            res.send({ success: true, data: { result } })
-        } catch (error) {
-            console.log(error.name, error.message)
-            res.send({ success: false, message: error.message })
-        }
+        const result = await Users.updateOne(filter, updateDoc, options)
+        res.send({ success: true, data: { result } })
     } else {
         const updateDoc = { $set: { role: null, name: updateUser.name } }
-        try {
-            const result = await Users.updateOne(filter, updateDoc, options)
-            res.send({ success: true, data: { result } })
-        } catch (error) {
-            console.log(error.name, error.message)
-            res.send({ success: false, message: error.message })
-        }
+        const result = await Users.updateOne(filter, updateDoc, options)
+        res.send({ success: true, data: { result } })
     }
 })
 app.get('/catagories', async (req, res) => {
     const quary = {}
-    try {
-        const result = await Catagorys.find(quary).toArray()
-        res.send({ success: true, data: result })
-    } catch (error) {
-        console.log(error.name, error.message)
-        res.send({
-            success: false, message: error.message
-        })
-    }
+    const result = await Catagorys.find(quary).toArray()
+    res.send({ success: true, data: result })
 })
 
 //----------------------------------------
@@ -98,30 +70,30 @@ app.get('/catagories', async (req, res) => {
 app.post('/shops', async (req, res) => {
     const shopDetails = req.body
     // console.log(user);
-    try {
-        const result = await Shops.insertOne(shopDetails)
-        res.send({ success: true, data: result })
-    } catch (error) {
-        console.log(error.name, error.message)
-        res.send({ success: false, message: error.message })
-    }
+    const result = await Shops.insertOne(shopDetails)
+    res.send({ success: true, data: result })
+
 })
 app.get('/shops', async (req, res) => {
     const { email } = req.query
     // console.log(email);
     const quary = { ownerEmail: email }
     // console.log(user);
-    try {
-        const result = await Shops.find(quary).toArray()
-        res.send({ success: true, data: result })
-    } catch (error) {
-        console.log(error.name, error.message)
-        res.send({ success: false, message: error.message })
-    }
+    const result = await Shops.find(quary).toArray()
+    res.send({ success: true, data: result })
+
 })
 
-
-
-
-//
+// erroe heandel :
+app.use((req, res, next) => {
+    res.status(500).send("Url not found")
+})
+app.use((err, req, res, next) => {
+    if (err.message) {
+        res.status(500).send(err.message)
+    } else {
+        res.status(500).send('there is an error')
+    }
+})
+//lissen:
 app.listen(port, () => console.log(process.env.PORT + " port is open"))
