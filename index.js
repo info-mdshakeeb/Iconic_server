@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require("express");
 const cors = require('cors')
 require('dotenv').config()
@@ -80,9 +80,29 @@ app.get('/shops', async (req, res) => {
     // console.log(email);
     const quary = { ownerEmail: email }
     // console.log(user);
-    const result = await Shops.find(quary).toArray()
+    const result = await Shops.find(quary).sort({ shopCreated: -1 }).toArray()
     res.send({ success: true, data: result })
 })
+
+app.put('/shop/:id', async (req, res) => {
+    const { id } = req.params;
+    const update = req.body;
+    console.log(update);
+    const filter = { _id: ObjectId(id) }
+    const options = { upsert: true }
+    if (update.status == 'Unauthorised') {
+        const updateDoc = { $set: { status: 'Peanding' } }
+        const result = await Shops.updateOne(filter, updateDoc, options)
+        res.send(result)
+    }
+    //  else {
+    //     const updateDoc = { $set: { role: null, name: updateUser.name } }
+    //     const result = await Users.updateOne(filter, updateDoc, options)
+    //     res.send({ success: true, data: { result } })
+    // }
+})
+
+
 
 // erroe heandel :
 app.use((req, res, next) => {
