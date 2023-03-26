@@ -1,4 +1,5 @@
 const { getDb } = require("../utilities/mongodb")
+const ObjectId = require('mongodb').ObjectID;
 
 module.exports.shops = async (req, res) => {
     const db = getDb();
@@ -40,6 +41,22 @@ module.exports.addShop = async (req, res) => {
     try {
         const result = await Shops.insertOne(shopDetails)
         res.status(201).send({ success: true, data: result })
+    } catch (error) {
+        res.status(500).send({ success: false, data: error })
+    }
+}
+
+module.exports.updateShop = async (req, res) => {
+    const db = getDb();
+    const Shops = db.collection("shops");
+    const { id } = req.params;
+    const updateShop = req.body;
+    const filter = { _id: ObjectId(id) }
+    const options = { upsert: true }
+    try {
+        const updateDoc = { $set: { status: updateShop.status } }
+        const result = await Shops.updateOne(filter, updateDoc, options)
+        res.status(200).send({ success: true, data: result })
     } catch (error) {
         res.status(500).send({ success: false, data: error })
     }

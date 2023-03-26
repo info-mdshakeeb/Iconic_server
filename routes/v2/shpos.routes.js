@@ -30,5 +30,15 @@ Router.route('/:email')
     **/
     .get(shopsRoute.shop)
 
+Router.route('/update/:id')
+    /**
+     * /api/v2/shop:
+     * put:
+     * description: update a shop
+     * parameters:
+     * - name: id
+     * */
+    .put(shopsRoute.updateShop)
+
 
 module.exports = Router;
