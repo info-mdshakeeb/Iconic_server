@@ -15,5 +15,13 @@ Router.route('/')
      **/
     .get(catagoriesRoute.catagories)
 
+Router.route('/:id')
+    /**
+     * /api/v2/catagories:
+     * get:
+     * description: Get a category
+     * responses:
+     **/
+    .get(catagoriesRoute.categoryWise)
 
 module.exports = Router;

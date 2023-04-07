@@ -4,7 +4,10 @@ require("dotenv").config();
 const { connectToServer } = require("./utilities/mongodb");
 const userApi = require("./routes/v2/user.route");
 const catagoriesApi = require("./routes/v2/catagories.route");
-const shopsApi = require("./routes/v2/shpos.routes");
+const shopsApi = require("./routes/v2/shpos.routes.js");
+const productApi = require("./routes/v2/products.route");
+const AddToCart = require("./routes/v2/addTocart.router");
+
 
 const app = Express();
 const Port = process.env.PORT || 3210;
@@ -23,13 +26,11 @@ connectToServer((err) => {
         app.listen(Port, () => {
             console.log(`Example app listening on port ${Port}`);
         });
-    } else {
-        console.log(err);
-    }
+    } else { console.log(err) }
 });
-
 //separates route :
 app.use("/api/v2/users", userApi);
 app.use("/api/v2/catagories", catagoriesApi);
-app.use("/api/v2/shops", shopsApi)
-
+app.use("/api/v2/shops", shopsApi);
+app.use("/api/v2/products", productApi);
+app.use("/api/v2/cart", AddToCart)
