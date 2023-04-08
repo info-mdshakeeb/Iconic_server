@@ -110,3 +110,21 @@ module.exports.addPaymentData = async (req, res) => {
         res.status(500).send({ error });
     }
 }
+//get payment data from payment collection by user :
+module.exports.getPaymentDataByUser = async (req, res) => {
+    const db = getDb();
+    const payment = db.collection("Payment");
+    const { email } = req.query;
+    try {
+        const result = await payment.find({ userEmail: email }).toArray();
+        if (result) {
+            res.status(200).send({ success: true, data: result });
+        }
+        else {
+            res.status(404).send({ success: false, data: result });
+        }
+    } catch (error) {
+        res.status(500).send({ error });
+    }
+}
+

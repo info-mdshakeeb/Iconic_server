@@ -14,7 +14,9 @@ Router.route('/payment')
     .delete(addToCart.deleteCartAfterPayment)
 
 Router.route('/payment/confirmed')
+    .get(addToCart.getPaymentDataByUser)
     .post(addToCart.addPaymentData)
+
 
 module.exports = Router;
 
