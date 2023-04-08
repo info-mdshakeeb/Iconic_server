@@ -24,5 +24,20 @@ Router.route('/')
     **/
     .put(usersRoute.updateUser)
 
+Router.route('/address')
+    /**
+     * /api/v2/users/address:
+     * get:
+     * description: Get all address
+     **/
+    .get(usersRoute.getAddress)
+    /**
+     * /api/v2/users/address:
+     * post:
+     * description: post a address
+     **/
+    .post(usersRoute.postAddress)
+    .delete(usersRoute.deleteAddress)
+
 
 module.exports = Router;

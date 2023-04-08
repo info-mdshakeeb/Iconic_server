@@ -10,5 +10,9 @@ Router.route('/')
 
 Router.route('/payment')
     .put(addToCart.paymentOne)
+
+Router.route('/confirmed')
+    .put(addToCart.paymentOne)
+
 module.exports = Router;
 
