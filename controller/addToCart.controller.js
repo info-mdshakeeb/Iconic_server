@@ -1,11 +1,12 @@
 const { getDb } = require("../utilities/mongodb");
+const ObjectId = require('mongodb').ObjectID;
 
 module.exports.getAddTwoCartByUser = async (req, res) => {
     const db = getDb();
     const cardItems = db.collection("CardItems");
     const { email } = req.query;
     try {
-        const result = await cardItems.find({ userEmail: email }).toArray();
+        const result = await cardItems.find({ userEmail: email, status: "pending" }).toArray();
         if (result) {
             res.status(200).send({ success: true, data: result });
         } else {
@@ -69,4 +70,29 @@ module.exports.deleteAddTwoCartByUser = async (req, res) => {
     catch (error) {
         res.status(500).send({ error });
     }
+}
+
+//payment :
+module.exports.paymentOne = async (req, res) => {
+    const db = getDb();
+    const cardItems = db.collection("CardItems");
+    const { email } = req.query;
+    const { product } = req.body;
+
+    const filter = { _id: ObjectId(product._id), userEmail: email };
+    const options = { upsert: true }
+    const updateDoc = { $set: { status: "verified" } };
+    try {
+        const result = await cardItems.updateOne(filter, updateDoc, options);
+
+        if (result.modifiedCount) {
+            res.status(201).send({ success: true, data: result });
+        } else {
+            res.status(404).send({ success: false, data: result });
+        }
+    }
+    catch (error) {
+        res.status(500).send({ error });
+    }
+
 }

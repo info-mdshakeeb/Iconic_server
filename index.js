@@ -8,6 +8,7 @@ const shopsApi = require("./routes/v2/shpos.routes.js");
 const productApi = require("./routes/v2/products.route");
 const AddToCart = require("./routes/v2/addTocart.router");
 
+const stripe = require("stripe")('sk_test_51M6D28BetmksUXSch9UNNcUO1jEJx4innz4P7Vuz6BctCaYkEmpZQbgMWTZ4M8QVGxwNTJm7RSNn7UxYcQWt1za7006OBF9cyD');
 
 const app = Express();
 const Port = process.env.PORT || 3210;
@@ -20,6 +21,26 @@ app.use(cors());
 app.get("/", (req, res) => {
     res.send("I am running");
 });
+
+//stripe payment route:
+app.post("/create-payment-intent", async (req, res) => {
+    const { items } = req.body;
+    const booking = req.body;
+    const price = booking.price;
+    const amount = price * 100;
+    // Create a PaymentIntent with the order amount and currency
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "bdt",
+        automatic_payment_methods: {
+            enabled: true,
+        },
+    });
+    res.send({
+        clientSecret: paymentIntent.client_secret,
+    });
+});
+
 //database connect :
 connectToServer((err) => {
     if (!err) {
