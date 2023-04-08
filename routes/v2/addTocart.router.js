@@ -8,11 +8,13 @@ Router.route('/')
     .put(addToCart.updateAddTwoCartByUser)
     .delete(addToCart.deleteAddTwoCartByUser)
 
-Router.route('/payment')
-    .put(addToCart.paymentOne)
 
-Router.route('/confirmed')
-    .put(addToCart.paymentOne)
+//payment route    
+Router.route('/payment')
+    .delete(addToCart.deleteCartAfterPayment)
+
+Router.route('/payment/confirmed')
+    .post(addToCart.addPaymentData)
 
 module.exports = Router;
 

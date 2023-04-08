@@ -73,19 +73,17 @@ module.exports.deleteAddTwoCartByUser = async (req, res) => {
 }
 
 //payment :
-module.exports.paymentOne = async (req, res) => {
+module.exports.deleteCartAfterPayment = async (req, res) => {
     const db = getDb();
     const cardItems = db.collection("CardItems");
     const { email } = req.query;
     const { product } = req.body;
 
     const filter = { _id: ObjectId(product._id), userEmail: email };
-    const options = { upsert: true }
     const updateDoc = { $set: { status: "verified" } };
     try {
-        const result = await cardItems.updateOne(filter, updateDoc, options);
-
-        if (result.modifiedCount) {
+        const result = await cardItems.deleteOne(filter);
+        if (result) {
             res.status(201).send({ success: true, data: result });
         } else {
             res.status(404).send({ success: false, data: result });
@@ -95,4 +93,20 @@ module.exports.paymentOne = async (req, res) => {
         res.status(500).send({ error });
     }
 
+}
+//add payment data in payment collection
+module.exports.addPaymentData = async (req, res) => {
+    const db = getDb();
+    const payment = db.collection("Payment");
+    const paymentData = req.body;
+    try {
+        const result = await payment.insertOne(paymentData);
+        if (result) {
+            res.status(201).send({ success: true, data: result });
+        } else {
+            res.status(404).send({ success: false, data: result });
+        }
+    } catch (error) {
+        res.status(500).send({ error });
+    }
 }
