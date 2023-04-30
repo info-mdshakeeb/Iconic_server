@@ -58,8 +58,14 @@ module.exports.updateShop = async (req, res) => {
             const updateDoc = { $set: { category: updateShop.category } }
             const result = await Shops.updateOne(filter, updateDoc, options)
             res.status(200).send({ success: true, data: result })
-        } else {
+        }
+        else if (updateShop?.status) {
             const updateDoc = { $set: { status: updateShop.status } }
+            const result = await Shops.updateOne(filter, updateDoc, options)
+            res.status(200).send({ success: true, data: result })
+        }
+        else {
+            const updateDoc = { $set: { Advertisement: updateShop.Advertisement } }
             const result = await Shops.updateOne(filter, updateDoc, options)
             res.status(200).send({ success: true, data: result })
         }
@@ -111,7 +117,27 @@ module.exports.verifiedShops = async (req, res) => {
         res.status(500).send({ success: false, data: error })
     }
 }
+// infinite scroll:
+module.exports.verifiedShopsScroll = async (req, res) => {
+    const db = getDb();
+    const limit = req.query.limit;// Number of items to return per page
+    const page = req.query.page || 1;
+    const Shops = db.collection("shops");
+    const query = { status: "verified" }
+    const skip = (page - 1) * limit; // Number of items to skip
 
+    try {
+        const result = await Shops.find(query).sort({ shopCreated: -1 }).skip(parseInt(skip)).limit(parseInt(limit)).toArray();
+        if (result.length) {
+            res.status(200).send({ success: true, data: result })
+        } else {
+            res.status(404).send({ success: false, data: result })
+        }
+    }
+    catch (error) {
+        res.status(500).send({ success: false, data: error })
+    }
+}
 module.exports.getShopeByID = async (req, res) => {
     const db = getDb();
     const Shops = db.collection("shops");
@@ -125,6 +151,35 @@ module.exports.getShopeByID = async (req, res) => {
             res.status(404).send({ success: false, data: result })
         }
     } catch (error) {
+        res.status(500).send({ success: false, data: error })
+    }
+}
+//get Advertisement shops :
+module.exports.getAdvertisementPendingShops = async (req, res) => {
+    const db = getDb();
+    const Shops = db.collection("shops");
+    const query = { Advertisement: "requested", status: "verified" }
+    try {
+        const result = await Shops.find(query).toArray()
+        if (result.length) {
+            res.send({ success: true, data: result })
+        } else { res.status(404).send({ success: false, data: result }) }
+    }
+    catch (error) {
+        res.status(500).send({ success: false, data: error })
+    }
+}
+module.exports.getAdvertisementShops = async (req, res) => {
+    const db = getDb();
+    const Shops = db.collection("shops");
+    const query = { Advertisement: "acceded", status: "verified" }
+    try {
+        const result = await Shops.find(query).toArray()
+        if (result.length) {
+            res.send({ success: true, data: result })
+        } else { res.status(404).send({ success: false, data: result }) }
+    }
+    catch (error) {
         res.status(500).send({ success: false, data: error })
     }
 }

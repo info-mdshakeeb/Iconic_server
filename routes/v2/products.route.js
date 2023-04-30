@@ -11,6 +11,9 @@ Router.route('/')
      * responses:
      **/
     .get(productsRoute.products)
+
+Router.route('/verified/all')
+    .get(productsRoute.infiniteScrollProducts)
     /**
      * /api/v2/products:
      * post:
@@ -20,7 +23,7 @@ Router.route('/')
 
 Router.route('/:id')
     /**
-     * /api/v2/products:
+     * /api/v2/products: 
      * put:
      * description: update product
      * */
@@ -52,5 +55,31 @@ Router.route('/id/:id')
      * description: Get product by id
      **/
     .get(productsRoute.getProductById);
+
+Router.route('/advertisement')
+    /**
+     * /api/v2/products/advertisement/products:
+     * get:
+     * description: Get advertisement products
+     **/
+    .get(productsRoute.getAdvertisementProducts);
+Router.route('/advertisement/verified')
+    /**
+     * /api/v2/products/advertisement/verified:
+     * get:
+     * description: Get advertisement products
+     **/
+    .get(productsRoute.getAdvertisementProductsVr);
+
+
+
+Router.route('/random')
+    /**
+     * /api/v2/products/random:
+     * get:
+     * description: Get random products
+     * responses:
+     **/
+    .get(productsRoute.getRandomProducts);
 
 module.exports = Router;

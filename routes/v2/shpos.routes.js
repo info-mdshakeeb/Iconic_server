@@ -21,7 +21,7 @@ Router.route('/')
 
 Router.route('/:email')
     /**
-       * /api/v2/shop:
+       * /api/v2/shops:
        * get:
        * description: Get a shop by email
        * responses:
@@ -32,7 +32,7 @@ Router.route('/:email')
 
 Router.route('/id/:id')
     /**
-     * /api/v2/shop:
+     * /api/v2/shops:
      * find a shop by id:
      * description: Get a shop by id
      * 
@@ -41,7 +41,7 @@ Router.route('/id/:id')
 
 Router.route('/update/:id')
     /**
-     * /api/v2/shop:
+     * /api/v2/shops:
      * put:
      * description: update a shop
      * parameters:
@@ -51,7 +51,7 @@ Router.route('/update/:id')
 
 Router.route('/type/pending')
     /**
-     * /api/v2/shop:
+     * /api/v2/shops:
      * get:
      * description: Get all pending shops
      * responses:
@@ -65,6 +65,17 @@ Router.route("/type/verified")
      * description: Get all verified shops
      * responses:
      * */
-    .get(shopsRoute.verifiedShops)
+    .get(shopsRoute.verifiedShopsScroll)
+
+Router.route('/type/advertisement/pending')
+    /**
+     * /api/v2/shops/advertisement:
+     * get:
+     * description: Get advertisement products
+     **/
+    .get(shopsRoute.getAdvertisementPendingShops);
+
+Router.route('/type/advertisement/verified')
+    .get(shopsRoute.getAdvertisementShops);
 
 module.exports = Router;

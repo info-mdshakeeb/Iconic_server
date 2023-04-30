@@ -17,6 +17,9 @@ Router.route('/payment/confirmed')
     .get(addToCart.getPaymentDataByUser)
     .post(addToCart.addPaymentData)
 
+Router.route('/payment/confirmed/:email')
+    .get(addToCart.getPaymentDataBySeller)
+
 
 module.exports = Router;
 

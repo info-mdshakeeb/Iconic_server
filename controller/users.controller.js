@@ -8,10 +8,16 @@ module.exports.user = async (req, res) => {
     const { email } = req.query;
     const result = await Users.find({ email: email }).toArray();
     try {
-        if (result.length) {
+        if (email) {
+            if (result.length) {
+                res.status(200).send({ success: true, data: result })
+            } else {
+                res.status(404).send({ success: false, data: result })
+            }
+        }
+        else {
+            const result = await Users.find({}).toArray();
             res.status(200).send({ success: true, data: result })
-        } else {
-            res.status(404).send({ success: false, data: result })
         }
     } catch (error) {
         res.status(500).send({ success: false, error: error.message })
@@ -39,11 +45,11 @@ module.exports.updateUser = async (req, res) => {
     const options = { upsert: true }
     try {
         if (updateUser.role) {
-            const updateDoc = { $set: { role: 'seller', name: updateUser.name } }
+            const updateDoc = { $set: { role: updateUser?.role, name: updateUser.name } }
             const result = await Users.updateOne(filter, updateDoc, options)
             res.send({ success: true, data: { result } })
         } else {
-            const updateDoc = { $set: { role: null, name: updateUser.name } }
+            const updateDoc = { $set: { name: updateUser.name } }
             const result = await Users.updateOne(filter, updateDoc, options)
             res.send({ success: true, data: { result } })
         }

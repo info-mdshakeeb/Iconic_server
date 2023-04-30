@@ -8,10 +8,10 @@ const shopsApi = require("./routes/v2/shpos.routes.js");
 const productApi = require("./routes/v2/products.route");
 const AddToCart = require("./routes/v2/addTocart.router");
 
-const stripe = require("stripe")('sk_test_51M6D28BetmksUXSch9UNNcUO1jEJx4innz4P7Vuz6BctCaYkEmpZQbgMWTZ4M8QVGxwNTJm7RSNn7UxYcQWt1za7006OBF9cyD');
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = Express();
-const Port = process.env.PORT || 3210;
+const Port = process.env.PORT;
 
 //middleware :
 app.use(Express.json());

@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb");
 require("dotenv").config();
-const connectionString = "mongodb+srv://shakeeb:shakeeb@shakeeb.bir9tha.mongodb.net/?retryWrites=true&w=majority";
+const connectionString = process.env.DATABASE_URL;
 const client = new MongoClient(connectionString, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -14,7 +14,6 @@ module.exports = {
             if (err || !db) {
                 return callback(err);
             }
-
             dbConnection = db.db("ICONIC");
             console.log("Successfully connected to MongoDB.");
 
